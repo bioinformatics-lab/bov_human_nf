@@ -1,3 +1,5 @@
+nextflow.enable.dsl = 2
+
 include { DOWNLOAD_CARNEIRO } from "./workflows/download_genomes/carneiro.nf" addParams (resultsDir: "${params.outdir}/raw/carneiro")
 
 
