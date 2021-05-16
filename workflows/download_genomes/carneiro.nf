@@ -1,6 +1,6 @@
 nextflow.enable.dsl = 2
 
-ids_ch = [
+ids = [
             'SRR13046668',
             'SRR13046669',
             'SRR13046670',
@@ -42,5 +42,12 @@ process CARNEIRO {
     ncbi-acc-download --format fasta ${genomeId}
 
     """
+}
+
+workflow DOWNLOAD_CARNEIRO {
+
+    sra_ch = Channel.of(ids)
+
+    CARNEIRO(sra_ch.flatten())
 
 }
