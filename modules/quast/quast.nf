@@ -10,6 +10,7 @@ process QUAST {
     publishDir params.resultsDir, mode: params.saveMode, enabled: params.shouldPublish
 
     input:
+    path(reference)
     path(scaffoldFiles)
 
     output:
@@ -19,7 +20,7 @@ process QUAST {
     script:
 
     """
-    quast ${scaffoldFiles}
+    quast -r ${reference} -t ${task.cpus} ${scaffoldFiles}
     """
 
     stub:
