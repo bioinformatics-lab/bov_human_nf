@@ -56,19 +56,6 @@ workflow {
 }
 
 
-workflow SPADES {
-    reads_ch = Channel.fromFilePairs(params.reads)
-    gatk38_jar_ch = Channel.value(java.nio.file.Paths.get("$params.gatk38_jar"))
-    env_user_ch = Channel.value("root")
-
-    UNICYCLER(TRIMMOMATIC.out)
-    UTILS_FILTER_CONTIGS(UNICYCLER.out[0])
-    QUAST(UTILS_FILTER_CONTIGS.out.collect(), refGbk_ch)
-}
-
-
-
-
 // include { DOWNLOAD_CARNEIRO } from "./workflows/download_genomes/carneiro.nf" addParams (resultsDir: "${params.outdir}/raw/carneiro")
 // workflow DOWNLOAD_GENOMES {
 //     DOWNLOAD_CARNEIRO()
