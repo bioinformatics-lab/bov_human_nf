@@ -1,4 +1,47 @@
-nextflow.enable.dsl = 2
+// nextflow.enable.dsl = 2
+
+// process CARNEIRO {
+//     tag "${genomeId}"
+//     errorStrategy "ignore"
+//     cpus 1
+//     publishDir params.resultsDir, mode: 'move'
+
+//     input:
+//     val(genomeId)
+
+//     output:
+//     path("*fa")
+
+//     script:
+//     """
+//     ncbi-acc-download --format fasta ${genomeId}
+
+//     """
+// }
+
+// workflow DOWNLOAD_CARNEIRO {
+
+//     sra_ch = Channel.of(ids)
+
+//     CARNEIRO(sra_ch.flatten())
+
+// }
+
+
+/*
+================================
+params
+================================
+*/
+
+params.resultsDir = 'results/rawGenomes'
+params.apiKey = "FIXME"
+
+/*
+================================
+ids of genomes to be downloaded
+================================
+*/
 
 ids = [
             'SRR13046668',
@@ -25,29 +68,33 @@ ids = [
             'SRR13046689'
     ]
 
-process CARNEIRO {
-    tag "${genomeId}"
-    errorStrategy "ignore"
-    cpus 1
-    publishDir params.resultsDir, mode: 'move'
+
+
+/*
+================================
+only for publishing these files to results folder
+================================
+*/
+
+
+process downloadRawGenomes {
+    tag "${genomeName}"
+    publishDir params.resultsDir, mode: 'copy'
 
     input:
-    val(genomeId)
-
-    output:
-    path("*fa")
+    tuple val(genomeName), file(genomeReads) from Channel.fromSRA(ids, cache: true, apiKey: params.apiKey)
 
     script:
-    """
-    ncbi-acc-download --format fasta ${genomeId}
 
     """
-}
+    echo ${genomeName}
+    echo ${genomeReads[0]}
+    echo ${genomeReads[1]}
+    """
 
-workflow DOWNLOAD_CARNEIRO {
+    //mkdir -p ../../../$params.resultsDir
+    //cp \$(readlink -f ${genomeReads[0]}) ../../../$params.resultsDir/
+    //cp \$(readlink -f ${genomeReads[1]}) ../../../$params.resultsDir/
 
-    sra_ch = Channel.of(ids)
-
-    CARNEIRO(sra_ch.flatten())
 
 }
