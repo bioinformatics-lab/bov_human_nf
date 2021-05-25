@@ -16,10 +16,10 @@ workflow {
     env_user_ch = Channel.value("root")
 
 
-    FASTQC_UNTRIMMED(sra_ch)
+    FASTQC_UNTRIMMED(reads_ch)
     MULTIQC_UNTRIMMED(FASTQC_UNTRIMMED.out.flatten().collect())
 
-    TRIMMOMATIC(sra_ch)
+    TRIMMOMATIC(reads_ch)
     FASTQC_TRIMMED(TRIMMOMATIC.out)
     MULTIQC_TRIMMED(FASTQC_TRIMMED.out.flatten().collect())
 
@@ -49,9 +49,7 @@ workflow {
 
 
 
-include { DOWNLOAD_CARNEIRO } from "./workflows/download_genomes/carneiro.nf" addParams (resultsDir: "${params.outdir}/raw/carneiro")
-
-
-workflow DOWNLOAD_GENOMES {
-    DOWNLOAD_CARNEIRO()
-}
+// include { DOWNLOAD_CARNEIRO } from "./workflows/download_genomes/carneiro.nf" addParams (resultsDir: "${params.outdir}/raw/carneiro")
+// workflow DOWNLOAD_GENOMES {
+//     DOWNLOAD_CARNEIRO()
+// }
